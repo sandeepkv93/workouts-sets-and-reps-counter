@@ -65,6 +65,9 @@ def create_combined_audio(args):
     combined_set_announcements.export(args.output_file, format="mp3")
     print(f"MP3 file created: {args.output_file}")
 
-if __name__ == "__main__":
+def main():
     args = create_parser().parse_args()
     create_combined_audio(args)
+
+if __name__ == "__main__":
+    main()

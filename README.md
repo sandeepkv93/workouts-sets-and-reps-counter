@@ -2,10 +2,26 @@
 
 This is a simple python script that generates an audio file that counts sets and reps. It is intended to be used as a guide for workouts.
 
+### Setup
+
+Install dependencies with `uv`:
+
+```bash
+uv sync
+```
+
 ### Usage
 
+Run the script with `uv`:
+
+```bash
+uv run python sets_and_reps_counter.py --reps REPS --sets SETS --rep_gap REP_GAP --set_gap SET_GAP --output_file OUTPUT_FILE
 ```
-usage: sets_and_reps_counter.py [-h] --reps REPS --sets SETS --rep_gap REP_GAP --set_gap SET_GAP [--output_file OUTPUT_FILE]
+
+CLI help:
+
+```
+usage: sets_and_reps_counter.py [-h] --reps REPS --sets SETS --rep_gap REP_GAP --set_gap SET_GAP --output_file OUTPUT_FILE
 
 Generate a guided sets and reps audio file.
 
@@ -23,9 +39,11 @@ options:
 
 If you want to do 3 sets of 10 reps with a 1 second gap between reps, you would run the following command:
 
+```bash
+uv run python sets_and_reps_counter.py --reps 10 --sets 3 --rep_gap 1 --set_gap 30 --output_file 3x10.mp3
 ```
-python3 sets_and_reps_counter.py --reps 10 --sets 3 --rep_gap 1 --set_gap 30 --output_file 3x10.mp3
-```
+
+This script uses `gTTS`, so it needs network access while generating speech. `pydub` may also require `ffmpeg` to be installed on your system for mp3 handling.
 
 ### Audio File Contents
 
