@@ -1,6 +1,6 @@
 ### Sets and Reps Counter
 
-This is a simple python script that generates an audio file that counts sets and reps. It is intended to be used as a guide for workouts.
+This project generates guided workout audio files for fixed sets and reps. It speaks the set number, counts each rep, inserts timing gaps, adds an optional countdown, announces rest periods, and ends with a completion cue.
 
 ### Setup
 
@@ -10,106 +10,70 @@ Install dependencies with `uv`:
 uv sync
 ```
 
+### Requirements
+
+- Python 3.12+
+- Network access for Google Text-to-Speech
+- `ffmpeg` available on your system so `pydub` can decode the generated mp3 speech clips
+
 ### Usage
 
-Run the script with `uv`:
+Basic example:
 
 ```bash
-uv run python sets_and_reps_counter.py --reps REPS --sets SETS --rep_gap REP_GAP --set_gap SET_GAP --output_file OUTPUT_FILE
+uv run python sets_and_reps_counter.py \
+  --reps 10 \
+  --sets 3 \
+  --rep-gap 1 \
+  --set-gap 30 \
+  --output-file 3x10.mp3
 ```
 
-CLI help:
+This produces audio shaped roughly like:
 
-```
-usage: sets_and_reps_counter.py [-h] --reps REPS --sets SETS --rep_gap REP_GAP --set_gap SET_GAP --output_file OUTPUT_FILE
-
-Generate a guided sets and reps audio file.
-
-options:
-  -h, --help            show this help message and exit
-  --reps REPS           The number of reps in each set.
-  --sets SETS           The number of sets.
-  --rep_gap REP_GAP     The gap between reps in seconds.
-  --set_gap SET_GAP     The gap between sets in seconds.
-  --output_file OUTPUT_FILE
-                        The output mp3 file name.
-```
-
-### Example
-
-If you want to do 3 sets of 10 reps with a 1 second gap between reps, you would run the following command:
-
-```bash
-uv run python sets_and_reps_counter.py --reps 10 --sets 3 --rep_gap 1 --set_gap 30 --output_file 3x10.mp3
-```
-
-This script uses `gTTS`, so it needs network access while generating speech. `pydub` may also require `ffmpeg` to be installed on your system for mp3 handling.
-
-### Audio File Contents
-
-Suppose you run the above command. The audio file will contain the following:
-
-```
+```text
+Starting in
+3
+2
+1
 Set 1
 1
-1 second gap
 2
-1 second gap
-3
-1 second gap
-4
-1 second gap
-5
-1 second gap
-6
-1 second gap
-7
-1 second gap
-8
-1 second gap
-9
-1 second gap
+...
 10
-30 seconds gap
+Rest
 Set 2
-1
-1 second gap
-2
-1 second gap
-3
-1 second gap
-4
-1 second gap
-5
-1 second gap
-6
-1 second gap
-7
-1 second gap
-8
-1 second gap
-9
-1 second gap
-10
-30 seconds gap
-Set 3
-1
-1 second gap
-2
-1 second gap
-3
-1 second gap
-4
-1 second gap
-5
-1 second gap
-6
-1 second gap
-7
-1 second gap
-8
-1 second gap
-9
-1 second gap
-10
+...
+Workout complete
+```
+
+### Useful Options
+
+- `--countdown 0` disables the spoken countdown
+- `--announce-rest` or `--no-announce-rest` toggles the spoken rest cue
+- `--set-start-gap 1.5` changes the pause between `Set N` and the first rep
+- `--format wav` exports a wav file instead of inferring from the output filename
+- `--language en` changes the gTTS language
+- `--cache-dir /path/to/cache` changes where speech clips are cached
+- `--no-cache` forces fresh speech generation for the current run
+- `--verbose` enables debug logging
+
+### CLI Help
+
+```text
+usage: sets_and_reps_counter.py [-h] --reps REPS --sets SETS --rep-gap REP_GAP
+                                --set-gap SET_GAP --output-file OUTPUT_FILE
+                                [--format {mp3,wav}] [--language LANGUAGE]
+                                [--cache-dir CACHE_DIR] [--no-cache]
+                                [--countdown COUNTDOWN]
+                                [--announce-rest | --no-announce-rest]
+                                [--set-start-gap SET_START_GAP] [--verbose]
+```
+
+### Development
+
+Run the test suite with:
+
+```bash
+uv run python -m unittest discover -s tests -v
 ```
