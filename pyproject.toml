@@ -1,7 +1,7 @@
 [project]
-name = "workouts-sets-and-reps-counter"
-version = "0.1.0"
-description = "Generate guided workout audio files that count sets and reps."
+name = "workout-audio-coach"
+version = "0.2.0"
+description = "Generate guided workout audio files with previewable sets, reps, and rest cues."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -9,9 +9,9 @@ dependencies = [
     "pydub>=0.25.1",
 ]
 
+[project.scripts]
+workout-audio-coach = "workout_audio_coach.cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.uv]
-package = false

@@ -161,9 +161,9 @@ wheels = [
 ]
 
 [[package]]
-name = "workouts-sets-and-reps-counter"
-version = "0.1.0"
-source = { virtual = "." }
+name = "workout-audio-coach"
+version = "0.2.0"
+source = { editable = "." }
 dependencies = [
     { name = "gtts" },
     { name = "pydub" },

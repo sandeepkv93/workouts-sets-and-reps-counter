@@ -1,8 +1,14 @@
-### Sets and Reps Counter
+# Workout Audio Coach
 
-This project generates guided workout audio files for fixed sets and reps. It speaks the set number, counts each rep, inserts timing gaps, adds an optional countdown, announces rest periods, and ends with a completion cue.
+`workout-audio-coach` generates guided workout audio for fixed sets and reps. It can:
 
-### Setup
+- speak set numbers, rep counts, rest cues, and a completion cue
+- insert programmable countdown, rep, set, and set-start gaps
+- preview the spoken script without touching Google TTS or ffmpeg
+- export the preview plan to a text file
+- cache synthesized speech clips for faster repeated runs
+
+## Setup
 
 Install dependencies with `uv`:
 
@@ -10,26 +16,49 @@ Install dependencies with `uv`:
 uv sync
 ```
 
-### Requirements
+## Requirements
 
 - Python 3.12+
-- Network access for Google Text-to-Speech
-- `ffmpeg` available on your system so `pydub` can decode the generated mp3 speech clips
+- Network access for Google Text-to-Speech when generating audio
+- `ffmpeg` on your system so `pydub` can decode generated mp3 speech clips
 
-### Usage
+## Usage
 
-Basic example:
+Generate an audio workout:
 
 ```bash
-uv run python sets_and_reps_counter.py \
+uv run workout-audio-coach \
   --reps 10 \
   --sets 3 \
   --rep-gap 1 \
   --set-gap 30 \
-  --output-file 3x10.mp3
+  --output-file workouts/3x10.mp3
 ```
 
-This produces audio shaped roughly like:
+Preview the workout script without generating audio:
+
+```bash
+uv run workout-audio-coach \
+  --reps 10 \
+  --sets 3 \
+  --rep-gap 1 \
+  --set-gap 30 \
+  --preview
+```
+
+Write the preview plan to a file while also exporting audio:
+
+```bash
+uv run workout-audio-coach \
+  --reps 8 \
+  --sets 4 \
+  --rep-gap 0.75 \
+  --set-gap 20 \
+  --script-file plans/4x8.txt \
+  --output-file workouts/4x8.wav
+```
+
+The generated flow looks roughly like this:
 
 ```text
 Starting in
@@ -47,30 +76,33 @@ Set 2
 Workout complete
 ```
 
-### Useful Options
+## Useful Options
 
 - `--countdown 0` disables the spoken countdown
+- `--preview` prints the full workout script and exits if no output file is given
+- `--script-file /path/to/plan.txt` writes the preview script to disk
 - `--announce-rest` or `--no-announce-rest` toggles the spoken rest cue
 - `--set-start-gap 1.5` changes the pause between `Set N` and the first rep
-- `--format wav` exports a wav file instead of inferring from the output filename
+- `--tts-attempts 5` and `--tts-backoff 0.5` tune retry behavior for speech synthesis
+- `--format wav` exports wav instead of inferring from the output filename
 - `--language en` changes the gTTS language
 - `--cache-dir /path/to/cache` changes where speech clips are cached
 - `--no-cache` forces fresh speech generation for the current run
 - `--verbose` enables debug logging
 
-### CLI Help
+## CLI Help
 
 ```text
-usage: sets_and_reps_counter.py [-h] --reps REPS --sets SETS --rep-gap REP_GAP
-                                --set-gap SET_GAP --output-file OUTPUT_FILE
-                                [--format {mp3,wav}] [--language LANGUAGE]
-                                [--cache-dir CACHE_DIR] [--no-cache]
-                                [--countdown COUNTDOWN]
-                                [--announce-rest | --no-announce-rest]
-                                [--set-start-gap SET_START_GAP] [--verbose]
+uv run workout-audio-coach --help
 ```
 
-### Development
+Backward-compatible script usage still works:
+
+```bash
+uv run python sets_and_reps_counter.py --reps 10 --sets 3 --rep-gap 1 --set-gap 30 --preview
+```
+
+## Development
 
 Run the test suite with:
 
